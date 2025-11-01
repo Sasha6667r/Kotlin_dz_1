@@ -1,51 +1,35 @@
 package com.example.kotlin_dz_1
 
 import android.content.res.Configuration
-import android.graphics.Paint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.benchmark.traceprocessor.Row
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.kotlin_dz_1.ui.theme.Kotlin_dz_1Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,21 +46,26 @@ fun My_app(
 
 ) {
     val orientation = LocalConfiguration.current.orientation
-    var i =remember{0}
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    //var i =0
     val countState: MutableState<Int> = rememberSaveable{ mutableStateOf(0) }
-    val list: MutableList<String> = MutableList(countState.value) { "Text ${i++}" }
+    //val list: MutableList<String> = MutableList(countState.value) { "Text ${i++}" }
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorResource(R.color.app_theme))
     ) {
         Button(
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color(0xff004D40),       // цвет текста
-                containerColor = Color(0xff9ed6df)
+                contentColor = colorResource(R.color.button),       // цвет текста
+                containerColor = colorResource(R.color.button_color)
             ),
             modifier = Modifier
-                .padding(10.dp)
+                .padding(0.dp,0.dp,10.dp,10.dp)
                 .align(Alignment.BottomEnd)
+                .size(100.dp,70.dp)
                 .clip(
                     shape = RoundedCornerShape(15.dp)
                 ),
@@ -84,7 +73,7 @@ fun My_app(
             Text(
                 text = "+",
                 modifier = Modifier,
-                fontSize = 25.sp
+                fontSize = 25.sp,
 
             )
         }
@@ -96,53 +85,31 @@ fun My_app(
             .padding(0.dp,30.dp,0.dp,150.dp)
     ) {
         items(
-            count =list.size,
+            count =countState.value,
         ){ index ->
-            when(index) {
-                in 1..list.size step 2 ->
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(5.dp)
-                        .clip(
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
-                        )
-                        .background(Color.Blue)
+            Box(
+                modifier = Modifier
 
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.Center),
-                        text = list[index],
+                    .size(if(orientation == Configuration.ORIENTATION_LANDSCAPE){screenWidth/4}else{screenWidth/3})
+                    .padding(5.dp)
+                    .clip(
+                        shape = RoundedCornerShape(
+                            10.dp
+                        )
                     )
-                }
-                in 0..list.size step 2 ->
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(5.dp)
-                            .clip(
-                                shape = RoundedCornerShape(
-                                    10.dp
-                                )
-                            )
-                            .background(Color.Red)
+                    .background(if(index%2==0){colorResource(R.color.blueMy)}else{Color.Red})
 
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.Center),
-                            text = list[index],
-                        )
-                    }
+            ) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    text = index.toString(),
+                )
             }
         }
     }
     }
 }
-//поработать с ресурсами
 
 
 @Preview(
